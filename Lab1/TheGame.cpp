@@ -237,7 +237,7 @@ void TheGame::Render()
 	Shader shader("..\\res\\shader"); //new shader
 	//wwwwwwShader fogEffect("..\\res\\fog"); //new shader
 
-	Tex skyTexture("..\\res\\Sky.jpg"); //load texture
+	Tex skyTexture("..\\res\\Water.jpg"); //load texture
 	Tex planeTexture("..\\res\\Metal.jpg"); //load texture
 	Tex birdTexture("..\\res\\fur.jpg"); //load texture
 	
