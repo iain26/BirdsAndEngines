@@ -31,6 +31,7 @@ void TheGame::Initialise()
 
 	jetSound = audio.AudioFileLoad("..\\res\\Wind.wav");
 	hitSound = audio.AudioFileLoad("..\\res\\BirdHit.wav");
+	chirpSound = audio.AudioFileLoad("..\\res\\Chirp.wav");
 	
 	plane.ModelFileLoad("..\\res\\NewPlane.obj");
 
@@ -80,93 +81,163 @@ void TheGame::GameLoop()
 		{
 			Keyboard();
 			Render();
-			//need to copy for every bird
-			if (Collided(leftEngine, 0.35, bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius())|| Collided(rightEngine, 0.35, bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius())) {
-				HitsTaken++;
-				system("cls");
-				cout << "Hits to engines: " << HitsTaken << " / " << HitLimit << endl;
-				PlaySoundFiles(hitSound, *planeMovements.GetPos());
-				bird1OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 50);
-				bird1Incre = 0;
-				bird1Movements.SetPos(bird1OrigPos);
-				if (Distance(bird1OrigPos, rightEngine) < Distance(bird1OrigPos, leftEngine)) {
-					bird1target = rightEngine;
-				}
-				else {
-					bird1target = leftEngine;
-				}
-			}
-			glm::vec3 bird1CurrentPos = *bird1Movements.GetPos();
-			if (bird1CurrentPos.z < -5) {
-				bird1OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 50);
-				bird1Incre = 0;
-				bird1Movements.SetPos(bird1OrigPos);
-				if (Distance(bird1OrigPos, rightEngine) < Distance(bird1OrigPos, leftEngine)) {
-					bird1target = rightEngine;
-				}
-				else {
-					bird1target = leftEngine;
-				}
+
+			if (Collided(*planeMovements.GetPos(), plane.getBoundingSphereRadius(), bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius())) {
+				CheckBird1Collision();
 			}
 
-
-			if (Collided(leftEngine, 0.35, bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius()) || Collided(rightEngine, 0.35, bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius())) {
-				HitsTaken++;
-				system("cls");
-				cout << "Hits to engines: " << HitsTaken << " / " << HitLimit << endl;
-				PlaySoundFiles(hitSound, *planeMovements.GetPos());
-				bird2OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 100);
-				bird2Incre = 0;
-				bird2Movements.SetPos(bird2OrigPos);
-				if (Distance(bird2OrigPos, rightEngine) < Distance(bird2OrigPos, leftEngine)) {
-					bird2target = rightEngine;
-				}
-				else {
-					bird2target = leftEngine;
-				}
-			}
-			glm::vec3 bird2CurrentPos = *bird2Movements.GetPos();
-			if (bird2CurrentPos.z < -5) {
-				bird2OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 100);
-				bird2Incre = 0;
-				bird2Movements.SetPos(bird2OrigPos);
-				if (Distance(bird2OrigPos, rightEngine) < Distance(bird2OrigPos, leftEngine)) {
-					bird2target = rightEngine;
-				}
-				else {
-					bird2target = leftEngine;
-				}
+			if (Collided(*planeMovements.GetPos(), plane.getBoundingSphereRadius(), bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius())) {
+				CheckBird2Collision();
 			}
 
-			if (Collided(leftEngine, 0.35, bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius()) || Collided(rightEngine, 0.35, bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius())) {
-				HitsTaken++;
-				system("cls");
-				cout << "Hits to engines: " << HitsTaken << " / " << HitLimit << endl;
-				PlaySoundFiles(hitSound, *planeMovements.GetPos());
-				bird3OrigPos = glm::vec3(-bird2OrigPos.x, -bird2OrigPos.y, 100);
-				bird3Incre = 0;
-				bird3Movements.SetPos(bird3OrigPos);
-				if (Distance(bird3OrigPos, rightEngine) < Distance(bird3OrigPos, leftEngine)) {
-					bird3target = rightEngine;
-				}
-				else {
-					bird3target = leftEngine;
-				}
+			if (Collided(*planeMovements.GetPos(), plane.getBoundingSphereRadius(), bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius())) {
+				CheckBird3Collision();
 			}
-			glm::vec3 bird3CurrentPos = *bird3Movements.GetPos();
-			if (bird3CurrentPos.z < -5) {
-				bird3OrigPos = glm::vec3(-bird2OrigPos.x, -bird2OrigPos.y, 100);
-				bird3Incre = 0;
-				bird3Movements.SetPos(bird3OrigPos);
-				if (Distance(bird3OrigPos, rightEngine) < Distance(bird3OrigPos, leftEngine)) {
-					bird3target = rightEngine;
-				}
-				else {
-					bird3target = leftEngine;
-				}
+
+			CheckBirdsOutRange();
+			
+		}
+	}
+}
+
+
+void TheGame::CheckBirdsOutRange() {
+	glm::vec3 bird1CurrentPos = *bird1Movements.GetPos();
+	if (bird1CurrentPos.z < -5) {
+		bird1OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 50);
+		bird1Incre = 0;
+		bird1Movements.SetPos(bird1OrigPos);
+		if (Distance(bird1OrigPos, rightEngine) < Distance(bird1OrigPos, leftEngine)) {
+			bird1target = rightEngine;
+		}
+		else {
+			bird1target = leftEngine;
+		}
+	}
+
+	glm::vec3 bird2CurrentPos = *bird2Movements.GetPos();
+	if (bird2CurrentPos.z < -5) {
+		bird2OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 100);
+		bird2Incre = 0;
+		bird2Movements.SetPos(bird2OrigPos);
+		if (Distance(bird2OrigPos, rightEngine) < Distance(bird2OrigPos, leftEngine)) {
+			bird2target = rightEngine;
+		}
+		else {
+			bird2target = leftEngine;
+		}
+	}
+
+
+	glm::vec3 bird3CurrentPos = *bird3Movements.GetPos();
+	if (bird3CurrentPos.z < -5) {
+		bird3OrigPos = glm::vec3(-bird2OrigPos.x, -bird2OrigPos.y, 100);
+		bird3Incre = 0;
+		bird3Movements.SetPos(bird3OrigPos);
+		if (Distance(bird3OrigPos, rightEngine) < Distance(bird3OrigPos, leftEngine)) {
+			bird3target = rightEngine;
+		}
+		else {
+			bird3target = leftEngine;
+		}
+	}
+}
+
+void TheGame::CheckBird1Collision() {
+		if (Collided(leftEngine, 0.35, bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius()) || Collided(rightEngine, 0.35, bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius())) {
+			HitsTaken++;
+			system("cls");
+			cout << "Hits to engines: " << HitsTaken << " / " << HitLimit << endl;
+			PlaySoundFiles(hitSound, *planeMovements.GetPos());
+			bird1OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 50);
+			bird1Incre = 0;
+			bird1Movements.SetPos(bird1OrigPos);
+			if (Distance(bird1OrigPos, rightEngine) < Distance(bird1OrigPos, leftEngine)) {
+				bird1target = rightEngine;
+			}
+			else {
+				bird1target = leftEngine;
+			}
+		}
+		if (Collided(*planeMovements.GetPos() + glm::vec3(0, 1, 2), 1, bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius()) ||
+			Collided(*planeMovements.GetPos() + glm::vec3(0, 1, 0), 1, bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius()) ||
+			Collided(*planeMovements.GetPos() + glm::vec3(0, 1, -2), 1, bird1.getBoundingSpherePos(), bird1.getBoundingSphereRadius())) {
+			PlaySoundFiles(chirpSound, *planeMovements.GetPos());
+			bird1OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 50);
+			bird1Incre = 0;
+			bird1Movements.SetPos(bird1OrigPos);
+			if (Distance(bird1OrigPos, rightEngine) < Distance(bird1OrigPos, leftEngine)) {
+				bird1target = rightEngine;
+			}
+			else {
+				bird1target = leftEngine;
+			}
+		}
+}
+
+void TheGame::CheckBird2Collision() {
+	if (Collided(leftEngine, 0.35, bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius()) || Collided(rightEngine, 0.35, bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius())) {
+		HitsTaken++;
+		system("cls");
+		cout << "Hits to engines: " << HitsTaken << " / " << HitLimit << endl;
+		PlaySoundFiles(hitSound, *planeMovements.GetPos());
+		bird2OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 100);
+		bird2Incre = 0;
+		bird2Movements.SetPos(bird2OrigPos);
+		if (Distance(bird2OrigPos, rightEngine) < Distance(bird2OrigPos, leftEngine)) {
+			bird2target = rightEngine;
+		}
+		else {
+			bird2target = leftEngine;
+		}
+		if (Collided(*planeMovements.GetPos() + glm::vec3(0, 1, 2), 1, bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius()) ||
+			Collided(*planeMovements.GetPos() + glm::vec3(0, 1, 0), 1, bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius()) ||
+			Collided(*planeMovements.GetPos() + glm::vec3(0, 1, -2), 1, bird2.getBoundingSpherePos(), bird2.getBoundingSphereRadius())) {
+			PlaySoundFiles(chirpSound, *planeMovements.GetPos());
+			bird2OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 50);
+			bird2Incre = 0;
+			bird2Movements.SetPos(bird2OrigPos);
+			if (Distance(bird2OrigPos, rightEngine) < Distance(bird2OrigPos, leftEngine)) {
+				bird2target = rightEngine;
+			}
+			else {
+				bird2target = leftEngine;
 			}
 		}
 	}
+}
+
+void TheGame::CheckBird3Collision() {
+	if (Collided(leftEngine, 0.35, bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius()) || Collided(rightEngine, 0.35, bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius())) {
+		HitsTaken++;
+		system("cls");
+		cout << "Hits to engines: " << HitsTaken << " / " << HitLimit << endl;
+		PlaySoundFiles(hitSound, *planeMovements.GetPos());
+		bird3OrigPos = glm::vec3(-bird2OrigPos.x, -bird2OrigPos.y, 100);
+		bird3Incre = 0;
+		bird3Movements.SetPos(bird3OrigPos);
+		if (Distance(bird3OrigPos, rightEngine) < Distance(bird3OrigPos, leftEngine)) {
+			bird3target = rightEngine;
+		}
+		else {
+			bird3target = leftEngine;
+		}
+		if (Collided(*planeMovements.GetPos() + glm::vec3(0, 1, 2), 1, bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius()) ||
+			Collided(*planeMovements.GetPos() + glm::vec3(0, 1, 0), 1, bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius()) ||
+			Collided(*planeMovements.GetPos() + glm::vec3(0, 1, -2), 1, bird3.getBoundingSpherePos(), bird3.getBoundingSphereRadius())) {
+			PlaySoundFiles(chirpSound, *planeMovements.GetPos());
+			bird3OrigPos = glm::vec3(rand() % 60 - 30, rand() % 60 - 30, 50);
+			bird3Incre = 0;
+			bird3Movements.SetPos(bird3OrigPos);
+			if (Distance(bird3OrigPos, rightEngine) < Distance(bird3OrigPos, leftEngine)) {
+				bird3target = rightEngine;
+			}
+			else {
+				bird3target = leftEngine;
+			}
+		}
+	}
+
 }
 
 void TheGame::Keyboard()
@@ -234,18 +305,12 @@ bool TheGame::Collided(glm::vec3 aP, float aR, glm::vec3 bP, float bR)
 void TheGame::Render()
 {
 	
-	Shader shader("..\\res\\shader"); //new shader
-	//wwwwwwShader fogEffect("..\\res\\fog"); //new shader
+	Shader shader("..\\res\\shader");
 
-	Tex skyTexture("..\\res\\Water.jpg"); //load texture
-	Tex planeTexture("..\\res\\Metal.jpg"); //load texture
-	Tex birdTexture("..\\res\\fur.jpg"); //load texture
+	Tex skyTexture("..\\res\\Sky.jpg");
+	Tex planeTexture("..\\res\\Metal.jpg");
+	Tex birdTexture("..\\res\\fur.jpg");
 	
-	//GLfloat fogColour[] = { 0.5f, 0.5f, 0.5f, 1 };
-	//glFogi(GL_FOG_MODE, GL_LINEAR);
-	//glFogfv(GL_FOG_COLOR, fogColour);
-	//glFogf(GL_FOG_START, 0);
-	//glFogf(GL_FOG_END, 1);
 
 	displayWindow.ClearDisplay(0.5f, 0.5f, 0.5f, 1.0f);
 
@@ -263,7 +328,7 @@ void TheGame::Render()
 	shader.UpdateShader(planeMovements, cam);
 	planeTexture.Bind(0);
 	plane.RenderModel();
-	plane.SetBoundingSphere(*planeMovements.GetPos(), 0.6f);
+	plane.SetBoundingSphere(*planeMovements.GetPos(), 7.0f);
 
 	planePos = *planeMovements.GetPos();
 
@@ -288,7 +353,6 @@ void TheGame::Render()
 		bird2Movements.SetPos(bird2OrigPos + (bird2Dir * bird2Incre));
 		bird2Movements.SetRot(glm::vec3(0.0, 0.0, 0.0));
 		bird2Movements.SetScale(glm::vec3(0.5, 0.5, 0.5));
-
 		shader.UpdateShader(bird2Movements, cam);
 		birdTexture.Bind(0);
 		bird2.RenderModel();

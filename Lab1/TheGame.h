@@ -24,7 +24,14 @@ private:
 	void Initialise();
 	void Keyboard();
 	void GameLoop();
-	void Render();
+	void Render(); 
+
+	void CheckBird1Collision();
+	void CheckBird2Collision();
+	void CheckBird3Collision();
+
+	void CheckBirdsOutRange();
+
 	bool Collided(glm::vec3 m1Pos, float m1Rad, glm::vec3 m2Pos, float m2Rad);
 	void SetInitialPositions();
 	float Distance(glm::vec3 a, glm::vec3 b);
@@ -74,5 +81,6 @@ private:
 	Sound audio;
 	unsigned int jetSound;
 	unsigned int hitSound;
+	unsigned int chirpSound;
 };
 
